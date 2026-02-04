@@ -1,11 +1,16 @@
 .navbar {
-	background-color: #0f0f0f;
+	background-color: #206C3A;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .navbar__nav {
 	display: flex;
 	flex-direction: column;
-	width: 300px;
+
+	gap: 1px;
+	background-color: #206C3A;
 }
 
 .navbar__option {
@@ -18,4 +23,38 @@
     &:hover {
         background-color: #0E402D;
     }
+}
+
+.navbar__nav--open {
+	width: 300px;
+	transition: width 0.3s;
+}
+.navbar__nav--closed {
+	width: 45px;
+	transition: width 0.3s;
+}
+
+.navbar__option-content {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.navbar__toggle-btn {
+	background-color: #295135 !important;
+	color: white !important;
+	border-radius: 0 !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 45px;
+}
+
+.navbar__toggle-icon--open {
+	transition: transform 0.3s;
+	transform: rotate(0deg);
+}
+.navbar__toggle-icon--closed {
+	transition: transform 0.3s;
+	transform: rotate(180deg);
 }

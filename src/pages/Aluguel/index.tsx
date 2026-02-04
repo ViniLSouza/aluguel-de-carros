@@ -1,9 +1,9 @@
 import { CardDefault } from '../../components/CardDefault';
 
-export function Home() {
+export function Aluguel() {
   return (
     <CardDefault>
-      <h1>Home Page</h1>
+      <h1>Aluguel Page</h1>
     </CardDefault>
   );
 }
