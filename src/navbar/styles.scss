@@ -1,0 +1,21 @@
+.navbar {
+	background-color: #0f0f0f;
+}
+
+.navbar__nav {
+	display: flex;
+	flex-direction: column;
+	width: 300px;
+}
+
+.navbar__option {
+	font-size: 20px;
+	padding-block: 5px;
+    padding-left: 10px;
+	background-color: #295135;
+	text-decoration: none;
+	color: white;
+    &:hover {
+        background-color: #0E402D;
+    }
+}
