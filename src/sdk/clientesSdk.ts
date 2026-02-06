@@ -12,3 +12,7 @@ type ClientesListResponse =
 export async function listarClientes(): Promise<ClientesListResponse> {
   return apiRequest<ClientesListResponse>('/cliente/listar', 'GET');
 }
+
+export async function listarClientesID(id: string | number): Promise<ClientesListResponse> {
+  return apiRequest<ClientesListResponse>(`/cliente/buscar/${id}`, 'GET');
+}

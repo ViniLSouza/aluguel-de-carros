@@ -28,13 +28,12 @@
 	transition: width 0.3s;
 }
 .navbar__nav--closed {
-	width: 45px;
+	width: 50px;
 	transition: width 0.3s;
 }
 
 .navbar__option-content {
 	display: flex;
-	align-items: left;
 	width: 100%;
 	gap: 10px;
 }

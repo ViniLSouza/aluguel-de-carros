@@ -39,7 +39,10 @@ function Header() {
         {NAV_LINKS.map((link) => (
           <Link key={link.to} to={link.to} className="navbar__option">
             <Button className="navbar__toggle-btn" type="button" aria-label="Toggle menu">
-              <div className="navbar__option-content">
+              <div
+                className="navbar__option-content"
+                style={{ justifyContent: isOpen ? 'flex-start' : 'center' }}
+              >
                 {link.icon}
                 {isOpen && <span>{link.label}</span>}
               </div>
@@ -47,7 +50,7 @@ function Header() {
           </Link>
         ))}
       </nav>
-      <div>
+      <div className={`navbar__nav ${isOpen ? 'navbar__nav--open' : 'navbar__nav--closed'}`}>
         {isAuthenticated && (
           <Button className="navbar__toggle-btn" onClick={handleLogout} aria-label="Logout">
             Sair
