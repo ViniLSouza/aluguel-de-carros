@@ -1,9 +1,9 @@
-import { Navbar } from './navbar';
+import { AppRoutes } from './routes';
 
 function App() {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      <Navbar />
+      <AppRoutes />
     </div>
   );
 }

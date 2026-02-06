@@ -15,8 +15,6 @@
 
 .navbar__option {
 	font-size: 20px;
-	padding-block: 5px;
-    padding-left: 10px;
 	background-color: #295135;
 	text-decoration: none;
 	color: white;
@@ -36,7 +34,8 @@
 
 .navbar__option-content {
 	display: flex;
-	align-items: center;
+	align-items: left;
+	width: 100%;
 	gap: 10px;
 }
 
@@ -47,6 +46,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	width: 100%;
 	min-width: 45px !important;
 }
 

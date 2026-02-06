@@ -1,9 +1,3 @@
-import { CardDefault } from '../../components/CardDefault';
-
 export function Home() {
-  return (
-    <CardDefault>
-      <h1>Home Page</h1>
-    </CardDefault>
-  );
+  return <h1>Home Page</h1>;
 }
