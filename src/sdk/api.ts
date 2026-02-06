@@ -11,15 +11,17 @@ type LoginResponse = {
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-async function apiRequest<TResponse, TBody = unknown>(
+export async function apiRequest<TResponse, TBody = unknown>(
   path: string,
   method: HttpMethod,
   body?: TBody,
 ): Promise<TResponse> {
+  const token = localStorage.getItem('authToken');
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
   });

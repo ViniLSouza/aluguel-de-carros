@@ -11,6 +11,14 @@ type AuthState = {
   error: string | null;
 };
 
+const getStoredToken = (): string | null => {
+  try {
+    return localStorage.getItem('authToken');
+  } catch {
+    return null;
+  }
+};
+
 const authDuck = createDuck('auth');
 
 export const Types = {
@@ -28,8 +36,8 @@ export const Actions = {
 };
 
 export const initialState: AuthState = {
-  isAuthenticated: false,
-  token: null,
+  isAuthenticated: !!getStoredToken(),
+  token: getStoredToken(),
   status: 'idle',
   error: null,
 };
@@ -77,6 +85,9 @@ export const authReducer = authDuck.createReducer(
 function* fetchLogin(action: { payload: LoginRequest }) {
   try {
     const result: LoginResponse = yield call(login, action.payload);
+    if (result?.token) {
+      localStorage.setItem('authToken', result.token);
+    }
     yield put(Actions.loginSuccess(result));
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Falha no login';
@@ -84,6 +95,11 @@ function* fetchLogin(action: { payload: LoginRequest }) {
   }
 }
 
+function* handleLogout() {
+  yield call([localStorage, 'removeItem'], 'authToken');
+}
+
 export function* authSaga() {
   yield takeLatest(Types.LOGIN as unknown as TakeLatestPattern, fetchLogin);
+  yield takeLatest(Types.LOGOUT as unknown as TakeLatestPattern, handleLogout);
 }
