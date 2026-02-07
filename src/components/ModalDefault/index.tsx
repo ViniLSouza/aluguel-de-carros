@@ -1,21 +1,6 @@
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Box,
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton, Box } from '@mui/material';
+import type { Breakpoint } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
-interface ModalDefaultProps {
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  fullWidth?: boolean;
-}
 
 export function ModalDefault({
   open,
@@ -24,14 +9,16 @@ export function ModalDefault({
   children,
   maxWidth = 'sm',
   fullWidth = true,
-}: ModalDefaultProps) {
+}) {
+  const allowedMaxWidths: Breakpoint[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+  const resolvedMaxWidth: Breakpoint =
+    typeof maxWidth === 'string' && allowedMaxWidths.includes(maxWidth as Breakpoint)
+      ? (maxWidth as Breakpoint)
+      : 'sm';
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth}>
-      {title && (
-        <DialogTitle sx={{ pr: 6 }}>
-          {title}
-        </DialogTitle>
-      )}
+    <Dialog open={open} onClose={onClose} maxWidth={resolvedMaxWidth} fullWidth={fullWidth}>
+      {title && <DialogTitle sx={{ pr: 6 }}>{title}</DialogTitle>}
 
       <IconButton
         onClick={onClose}

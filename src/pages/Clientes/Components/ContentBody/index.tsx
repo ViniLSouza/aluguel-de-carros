@@ -1,30 +1,25 @@
 import { useState } from 'react';
 import { TableDefault } from '../../../../components/TableDefault';
-import type { Cliente } from '../../../../types/cliente';
 import { ModalClientesID } from '../../Modals/ModalClientesID';
 
-interface ContentBodyProps {
-  content: Cliente[];
-}
-
-export function ContentBody({ content }: ContentBodyProps) {
+export function ContentBody({ content }) {
   const [open, setOpen] = useState(false);
-  const [selectedID, setSelectedID] = useState<string | number | null>(null);
+  const [selectedID, setSelectedID] = useState(null);
 
-  const handleNomeClick = (id: string | number) => {
+  const handleNomeClick = (id) => {
     setSelectedID(id);
     setOpen(true);
   };
 
   return (
     <>
-      <TableDefault<Cliente>
+      <TableDefault
         columns={[
           { key: 'id', label: 'ID' },
           {
             key: 'nome',
             label: 'Nome',
-            render: (row: Cliente) => (
+            render: (row) => (
               <button
                 onClick={() => handleNomeClick(row.id)}
                 style={{

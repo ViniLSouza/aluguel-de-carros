@@ -1,17 +1,8 @@
 import { createDuck } from './createDuck';
-import type { DuckAction, DuckHandlers } from './createDuck';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { login } from '../../sdk/api';
-import type { LoginRequest, LoginResponse } from '../../sdk/api';
 
-type AuthState = {
-  isAuthenticated: boolean;
-  token: string | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
-};
-
-const getStoredToken = (): string | null => {
+const getStoredToken = () => {
   try {
     return localStorage.getItem('authToken');
   } catch {
@@ -29,28 +20,26 @@ export const Types = {
 };
 
 export const Actions = {
-  login: authDuck.createAction<LoginRequest>(Types.LOGIN),
-  loginSuccess: authDuck.createAction<LoginResponse>(Types.LOGIN_SUCCESS),
-  loginError: authDuck.createAction<{ message?: string }>(Types.LOGIN_ERROR),
+  login: authDuck.createAction(Types.LOGIN),
+  loginSuccess: authDuck.createAction(Types.LOGIN_SUCCESS),
+  loginError: authDuck.createAction(Types.LOGIN_ERROR),
   logout: authDuck.createAction(Types.LOGOUT),
 };
 
-export const initialState: AuthState = {
+export const initialState = {
   isAuthenticated: !!getStoredToken(),
   token: getStoredToken(),
   status: 'idle',
   error: null,
 };
 
-type TakeLatestPattern = Parameters<typeof takeLatest>[0];
-
 const handlers = {
-  [Types.LOGIN]: (state: AuthState) => ({
+  [Types.LOGIN]: (state) => ({
     ...state,
     status: 'loading',
     error: null,
   }),
-  [Types.LOGIN_SUCCESS]: (state: AuthState, action: DuckAction<LoginResponse>) => {
+  [Types.LOGIN_SUCCESS]: (state, action) => {
     const payload = action.payload;
     return {
       ...state,
@@ -60,7 +49,7 @@ const handlers = {
       error: null,
     };
   },
-  [Types.LOGIN_ERROR]: (state: AuthState, action: DuckAction<{ message?: string }>) => {
+  [Types.LOGIN_ERROR]: (state, action) => {
     const payload = action.payload;
     return {
       ...state,
@@ -68,7 +57,7 @@ const handlers = {
       error: payload?.message || 'Falha no login',
     };
   },
-  [Types.LOGOUT]: (state: AuthState) => ({
+  [Types.LOGOUT]: (state) => ({
     ...state,
     isAuthenticated: false,
     token: null,
@@ -78,17 +67,29 @@ const handlers = {
 };
 
 export const authReducer = authDuck.createReducer(
-  handlers as unknown as DuckHandlers<AuthState>,
+  handlers,
   initialState,
 );
 
-function* fetchLogin(action: { payload: LoginRequest }) {
+function* fetchLogin(action) {
   try {
-    const result: LoginResponse = yield call(login, action.payload);
+    const result = yield call(login, action.payload);
     if (result?.token) {
       localStorage.setItem('authToken', result.token);
+      yield put(Actions.loginSuccess(result));
+      return;
     }
-    yield put(Actions.loginSuccess(result));
+
+    if (result && typeof result === 'object' && 'sucesso' in result) {
+      if (result?.sucesso === 'SIM') {
+        yield put(Actions.loginSuccess(result));
+      } else {
+        yield put(Actions.loginError({ message: result?.message || 'Falha no login' }));
+      }
+      return;
+    }
+
+    yield put(Actions.loginError({ message: 'Resposta inválida.' }));
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Falha no login';
     yield put(Actions.loginError({ message }));
@@ -100,6 +101,6 @@ function* handleLogout() {
 }
 
 export function* authSaga() {
-  yield takeLatest(Types.LOGIN as unknown as TakeLatestPattern, fetchLogin);
-  yield takeLatest(Types.LOGOUT as unknown as TakeLatestPattern, handleLogout);
+  yield takeLatest(Types.LOGIN, fetchLogin);
+  yield takeLatest(Types.LOGOUT, handleLogout);
 }

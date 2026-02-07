@@ -12,13 +12,7 @@ import { CardDefault } from '../components/CardDefault';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Actions } from '../store/ducks/authDuck';
 
-interface NavLink {
-  to: string;
-  label: string;
-  icon: React.ReactNode;
-}
-
-const NAV_LINKS: NavLink[] = [
+const NAV_LINKS = [
   { to: '/', label: 'Home', icon: <HomeIcon /> },
   { to: '/clientes', label: 'Clientes', icon: <PersonIcon /> },
   { to: '/carros', label: 'Carros', icon: <DriveEtaIcon /> },
@@ -28,7 +22,13 @@ const NAV_LINKS: NavLink[] = [
 function Header() {
   const [isOpen, setIsOpen] = useState(true);
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.authReducer);
+  const { isAuthenticated } = useAppSelector(
+    (state: {
+      authReducer: {
+        isAuthenticated?: boolean;
+      };
+    }) => state.authReducer,
+  );
 
   const toggleNavbar = () => setIsOpen((prev) => !prev);
   const handleLogout = () => dispatch(Actions.logout());

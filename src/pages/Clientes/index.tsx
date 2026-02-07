@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Actions } from '../../store/ducks/clientesDucks';
+import { Actions } from '../../store/ducks/clientesDucks.ts';
 import { useEffect } from 'react';
 import { ContentBody } from './Components/ContentBody';
 
@@ -10,7 +10,16 @@ export function Clientes() {
   }, [dispatch]);
 
   const { contentListClientes, loadingListClientes, successListClientes, errorListClientes } =
-    useAppSelector((state) => state.clientesReducer);
+    useAppSelector(
+      (state: {
+        clientesReducer: {
+          contentListClientes?: unknown[];
+          loadingListClientes?: boolean;
+          successListClientes?: boolean;
+          errorListClientes?: unknown;
+        };
+      }) => state.clientesReducer,
+    );
 
   return (
     <>
@@ -19,7 +28,7 @@ export function Clientes() {
       ) : successListClientes ? (
         <ContentBody content={contentListClientes} />
       ) : errorListClientes ? (
-        <p>{errorListClientes}</p>
+        <p>{String(errorListClientes)}</p>
       ) : (
         <p>Nenhum cliente encontrado.</p>
       )}

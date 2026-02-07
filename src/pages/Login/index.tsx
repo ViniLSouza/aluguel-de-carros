@@ -14,13 +14,21 @@ import { Actions } from '../../store/ducks/authDuck';
 
 export function Login() {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, status, error } = useAppSelector((state) => state.authReducer);
+  const { isAuthenticated, status, error } = useAppSelector(
+    (state: {
+      authReducer: {
+        isAuthenticated?: boolean;
+        status?: string;
+        error?: unknown;
+      };
+    }) => state.authReducer,
+  );
   const [login, setLogin] = useState('');
   const [senha, setSenha] = useState('');
 
   const isLoading = status === 'loading';
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (!login || !senha || isLoading) {
       return;
@@ -50,7 +58,7 @@ export function Login() {
             required
             fullWidth
           />
-          {error && <Alert severity="error">{error}</Alert>}
+          {error && <Alert severity="error">{String(error)}</Alert>}
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button

@@ -1,21 +1,6 @@
 const API_BASE_URL = 'http://localhost:8080';
 
-type LoginRequest = {
-  login: string;
-  senha: string;
-};
-
-type LoginResponse = {
-  token: string;
-};
-
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
-export async function apiRequest<TResponse, TBody = unknown>(
-  path: string,
-  method: HttpMethod,
-  body?: TBody,
-): Promise<TResponse> {
+export async function apiRequest(path, method, body = undefined) {
   const token = localStorage.getItem('authToken');
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method,
@@ -31,11 +16,9 @@ export async function apiRequest<TResponse, TBody = unknown>(
     throw new Error(message || 'Falha na requisição');
   }
 
-  return response.json() as Promise<TResponse>;
+  return response.json();
 }
 
-export async function login(payload: LoginRequest): Promise<LoginResponse> {
-  return apiRequest<LoginResponse, LoginRequest>('/autenticacao/login', 'POST', payload);
+export async function login(payload) {
+  return apiRequest('/autenticacao/login', 'POST', payload);
 }
-
-export type { LoginRequest, LoginResponse };

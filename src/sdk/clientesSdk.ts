@@ -1,18 +1,18 @@
 import { apiRequest } from "./api";
-import type { Cliente } from "../types/cliente";
 
-type ClientesListResponse =
-  | {
-      sucesso?: string;
-      content?: Cliente[];
-      message?: string;
-    }
-  | Cliente[];
-
-export async function listarClientes(): Promise<ClientesListResponse> {
-  return apiRequest<ClientesListResponse>('/cliente/listar', 'GET');
+export async function listarClientes() {
+  return apiRequest('/cliente/listar', 'GET');
 }
 
-export async function listarClientesID(id: string | number): Promise<ClientesListResponse> {
-  return apiRequest<ClientesListResponse>(`/cliente/buscar/${id}`, 'GET');
+export async function listarClientesID(id) {
+  return apiRequest(`/cliente/buscar/${id}`, 'GET');
 }
+
+export async function desativarCliente(id) {
+  return apiRequest(`/cliente/desativar/${id}`, 'DELETE');
+}
+
+export async function editarCliente(id, payload) {
+  return apiRequest(`/cliente/editar/${id}`, 'PUT', payload);
+}
+

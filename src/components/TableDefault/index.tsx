@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Table,
   TableBody,
@@ -12,33 +11,15 @@ import {
   Typography,
 } from '@mui/material';
 
-export type TableColumn<T> = {
-  key: keyof T | string;
-  label: string;
-  align?: 'left' | 'center' | 'right';
-  width?: number | string;
-  render?: (row: T) => React.ReactNode;
-};
-
-type TableDefaultProps<T> = {
-  columns: TableColumn<T>[];
-  rows: T[];
-  getRowId?: (row: T, index: number) => React.Key;
-  loading?: boolean;
-  emptyMessage?: string;
-  dense?: boolean;
-  onRowClick?: (row: T) => void;
-};
-
-export function TableDefault<T>({
+export function TableDefault({
   columns,
   rows,
-  getRowId,
+  getRowId = undefined,
   loading = false,
   emptyMessage = 'Nenhum registro encontrado',
   dense = false,
-  onRowClick,
-}: TableDefaultProps<T>) {
+  onRowClick = undefined,
+}) {
   const hasRows = rows.length > 0;
 
   return (
@@ -91,7 +72,7 @@ export function TableDefault<T>({
               >
                 {columns.map((column) => (
                   <TableCell key={String(column.key)} align={column.align ?? 'left'}>
-                    {column.render ? column.render(row) : String(row[column.key as keyof T])}
+                    {column.render ? column.render(row) : String(row?.[column.key])}
                   </TableCell>
                 ))}
               </TableRow>
